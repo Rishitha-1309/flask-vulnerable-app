@@ -1,21 +1,25 @@
-name: Build and Deploy Docker App
+name: Build and Deploy Flask Docker App
 
+# Trigger the workflow on push to the 'main' branch
 on:
   push:
     branches:
-      - main  # Trigger when code is pushed to the `main` branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Checkout the code
     - name: Checkout code
       uses: actions/checkout@v2
 
+    # Step 2: Set up Docker Buildx
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
+    # Step 3: Cache Docker layers to speed up subsequent builds
     - name: Cache Docker layers
       uses: actions/cache@v2
       with:
@@ -24,15 +28,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
+    # Step 4: Build Docker image
     - name: Build Docker image
       run: |
         docker build -t flask-vulnerable-app .
 
-    - name: Push Docker image (optional, if using a remote registry)
+    # Step 5: Push Docker image to Docker Hub (optional)
+    - name: Push Docker image to Docker Hub
       run: |
         docker tag flask-vulnerable-app your-dockerhub-username/flask-vulnerable-app:latest
-        docker push your-dockerhub-username/flask-vulnerable-app:latest  # Optional, if pushing to DockerHub
+        docker push your-dockerhub-username/flask-vulnerable-app:latest  # Push to DockerHub (if desired)
 
+    # Step 6: Deploy Docker container to local environment (docker-compose)
     - name: Deploy Docker container to local environment
       run: |
         docker-compose down && docker-compose up --build -d
