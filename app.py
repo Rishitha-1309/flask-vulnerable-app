@@ -36,7 +36,7 @@ def login():
         # Vulnerable to SQL Injection
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'")
+        cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
         user = cursor.fetchone()
         conn.close()
 
