@@ -95,7 +95,7 @@ def settings():
     return "Settings Page - Hardcoded Admin Password: password123"
 
 # Security Misconfiguration - Debugging enabled in production
-app.config['DEBUG'] = True  # This should be disabled in production
+app.config['DEBUG'] = False  # This should be disabled in production
 
 # CSRF Vulnerability - Cross-Site Request Forgery
 @app.route('/update_settings', methods=['POST'])
